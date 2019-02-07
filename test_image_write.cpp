@@ -52,6 +52,10 @@ void test1() {
 }
 
 void test2() {
+    // this happens to pick up
+    // whatever garbage is on the stack
+    // so the png is interesting at least
+    // aka I am not clearing the pixels first
     char data[W*H*CHANNELS];
     const char * filename = "test2.png";
     for (int i=0;i<W;i++) {
@@ -59,6 +63,7 @@ void test2() {
         set_pixel(data,2,i,0,255,0);
         set_pixel(data,4,i,0,0,255);
     }
+    
     stbi_write_png(filename,W,H,CHANNELS,data,W*CHANNELS);
 }
 
