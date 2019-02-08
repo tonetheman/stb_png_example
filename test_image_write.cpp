@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <cstdlib>
+#include "macaron_base64.h"
+#include <string>
+#include <emscripten.h>
 
 using namespace std;
 
@@ -14,6 +17,10 @@ void stbi_wfunc(void *context, void *data, int size) {
     // context is really a FILE * in my case
     printf("wfunc: %d\n",size);
     fwrite(data, size, 1, (FILE*)context);
+    std::string ts((char*)data,size);
+    std::string output_s = "data:image/png;base64," + macaron::Base64::Encode(ts);
+    std::cout << output_s << std::endl;
+    EM_ASM( {let b = document.createElement("img"); body.src="$0"; document.body.appendChild(b); }, output_s.c_str() );
 }
 
 void pr(char * data, int size) {
@@ -69,7 +76,7 @@ void test2() {
 
 int main() {
     test1();
-    test2();
+    //test2();
 
     return 0;
 }
